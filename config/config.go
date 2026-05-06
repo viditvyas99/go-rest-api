@@ -9,7 +9,8 @@ import (
 )
 
 type Config struct {
-	Env string `mapstructure:"env"`
+	Env     string `mapstructure:"env"`
+	Address string `mapstructure:"address"`
 
 	Database struct {
 		Driver string `mapstructure:"driver"`
