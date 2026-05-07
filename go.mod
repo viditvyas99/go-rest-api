@@ -1,4 +1,4 @@
-module example/rest-api
+module github.com/Go-REST-API
 
 go 1.24.0
 

@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"example/rest-api/config"
+	"github.com/Go-REST-API/config"
 )
 
 var DB *sql.DB

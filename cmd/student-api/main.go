@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"example/rest-api/config"
-	"example/rest-api/database"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -11,6 +9,10 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Go-REST-API/database"
+
+	"github.com/Go-REST-API/config"
 )
 
 func main() {
