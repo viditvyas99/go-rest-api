@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Go-REST-API/database"
+	"github.com/Go-REST-API/internal/http/handles/student"
 
 	"github.com/Go-REST-API/config"
 )
@@ -29,11 +30,7 @@ func main() {
 	//setup routes
 
 	router := http.NewServeMux()
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-		w.Write([]byte("welcome to student api "))
-
-	})
+	router.HandleFunc("POST /api/students", student.New())
 	// setup server
 	// http.ListenAndServe(config.AppConfig.Address, router)
 
