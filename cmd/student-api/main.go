@@ -29,7 +29,7 @@ func main() {
 	//setup routes
 
 	router := http.NewServeMux()
-	router.HandleFunc("/students", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		w.Write([]byte("welcome to student api "))
 
