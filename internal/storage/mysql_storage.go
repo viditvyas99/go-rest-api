@@ -41,3 +41,24 @@ func (m *MySQLStorage) GetStudentByID(id int64) (*types.Student, error) {
 
 	return &student, nil
 }
+
+func (m *MySQLStorage) GetAllStudents() ([]types.Student, error) {
+	query := "SELECT id, name, email, class FROM students"
+	rows, err := database.DB.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get all students: %w", err)
+	}
+	defer rows.Close()
+
+	var students []types.Student
+	for rows.Next() {
+		var student types.Student
+		err := rows.Scan(&student.ID, &student.Name, &student.Email, &student.Class)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan student: %w", err)
+		}
+		students = append(students, student)
+	}
+
+	return students, nil
+}

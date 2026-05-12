@@ -6,4 +6,5 @@ type Storage interface {
 	// Define methods for storage operations, e.g., CRUD operations for students
 	CreateStudent(student types.Student) (int64, error)
 	GetStudentByID(id int64) (*types.Student, error)
+	GetAllStudents() ([]types.Student, error)
 }
