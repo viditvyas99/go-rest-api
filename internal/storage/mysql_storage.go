@@ -62,3 +62,23 @@ func (m *MySQLStorage) GetAllStudents() ([]types.Student, error) {
 
 	return students, nil
 }
+
+func (m *MySQLStorage) UpdateStudent(id int64, student types.Student) error {
+	query := "UPDATE students SET name = ?, email = ?, class = ? WHERE id = ?"
+	_, err := database.DB.Exec(query, student.Name, student.Email, student.Class, id)
+	if err != nil {
+		return fmt.Errorf("failed to update student: %w", err)
+	}
+
+	return nil
+}
+
+func (m *MySQLStorage) DeleteStudent(id int64) error {
+	query := "DELETE FROM students WHERE id = ?"
+	_, err := database.DB.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete student: %w", err)
+	}
+
+	return nil
+}

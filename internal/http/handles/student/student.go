@@ -100,3 +100,73 @@ func GetList() http.HandlerFunc {
 		response.WriteJSON(w, http.StatusOK, students)
 	}
 }
+
+func UpdateStudent() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		slog.Info("Received request to update student")
+
+		idStr := r.PathValue("id")
+
+		id, err := strconv.ParseInt(idStr, 10, 64)
+
+		if err != nil {
+			response.WriteJSON(w, http.StatusBadRequest, response.GenerateErrorResponse(errors.New("invalid id format"), http.StatusBadRequest))
+			return
+		}
+
+		var student types.Student
+		err = json.NewDecoder(r.Body).Decode(&student)
+
+		if errors.Is(err, io.EOF) {
+			response.WriteJSON(w, http.StatusBadRequest,
+				response.GenerateErrorResponse(err, http.StatusBadRequest))
+			return
+		}
+
+		validate := validator.New()
+		err = validate.Struct(student)
+		if err != nil {
+			slog.Error("Validation failed", "error", err)
+			response.WriteJSON(w, http.StatusBadRequest, response.ValidationError(err.(validator.ValidationErrors)))
+
+			return
+		}
+
+		store := storage.NewMySQLStorage()
+
+		err = store.UpdateStudent(id, student)
+		if err != nil {
+			slog.Error("Failed to update student", "error", err)
+			response.WriteJSON(w, http.StatusInternalServerError, response.GenerateErrorResponse(err, http.StatusInternalServerError))
+			return
+		}
+
+		response.WriteJSON(w, http.StatusOK, map[string]string{"message": "Student updated successfully", "id": string(id)})
+	}
+}
+
+func DeleteStudent() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		slog.Info("Received request to delete student")
+
+		idStr := r.PathValue("id")
+
+		id, err := strconv.ParseInt(idStr, 10, 64)
+
+		if err != nil {
+			response.WriteJSON(w, http.StatusBadRequest, response.GenerateErrorResponse(errors.New("invalid id format"), http.StatusBadRequest))
+			return
+		}
+
+		store := storage.NewMySQLStorage()
+
+		err = store.DeleteStudent(id)
+		if err != nil {
+			slog.Error("Failed to delete student", "error", err)
+			response.WriteJSON(w, http.StatusInternalServerError, response.GenerateErrorResponse(err, http.StatusInternalServerError))
+			return
+		}
+
+		response.WriteJSON(w, http.StatusOK, map[string]string{"message": "Student deleted successfully"})
+	}
+}

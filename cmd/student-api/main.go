@@ -31,12 +31,16 @@ func main() {
 
 	router := http.NewServeMux()
 	router.HandleFunc("POST /api/students", student.New())
-	// setup server
-	// http.ListenAndServe(config.AppConfig.Address, router)
-
 	router.HandleFunc("GET  /api/students/{id}", student.GetStudent())
 
 	router.HandleFunc("GET /api/students", student.GetList())
+
+	router.HandleFunc("PUT /api/students/{id}", student.UpdateStudent())
+
+	router.HandleFunc("DELETE /api/students/{id}", student.DeleteStudent())
+
+	// setup server
+	// http.ListenAndServe(config.AppConfig.Address, router)
 
 	server := http.Server{
 		Addr:    config.AppConfig.Address,
