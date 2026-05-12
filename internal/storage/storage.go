@@ -7,4 +7,6 @@ type Storage interface {
 	CreateStudent(student types.Student) (int64, error)
 	GetStudentByID(id int64) (*types.Student, error)
 	GetAllStudents() ([]types.Student, error)
+	UpdateStudent(id int64, student types.Student) error
+	DeleteStudent(id int64) error
 }
