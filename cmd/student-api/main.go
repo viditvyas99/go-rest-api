@@ -34,6 +34,8 @@ func main() {
 	// setup server
 	// http.ListenAndServe(config.AppConfig.Address, router)
 
+	router.HandleFunc("GET  /api/students/{id}", student.GetStudent())
+
 	server := http.Server{
 		Addr:    config.AppConfig.Address,
 		Handler: router,

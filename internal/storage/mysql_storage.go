@@ -28,3 +28,16 @@ func (m *MySQLStorage) CreateStudent(student types.Student) (int64, error) {
 
 	return id, nil
 }
+
+func (m *MySQLStorage) GetStudentByID(id int64) (*types.Student, error) {
+	query := "SELECT id, name, email, class FROM students WHERE id = ?"
+	row := database.DB.QueryRow(query, id)
+
+	var student types.Student
+	err := row.Scan(&student.ID, &student.Name, &student.Email, &student.Class)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get student by ID: %w", err)
+	}
+
+	return &student, nil
+}
