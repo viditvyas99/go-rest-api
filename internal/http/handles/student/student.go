@@ -83,3 +83,20 @@ func GetStudent() http.HandlerFunc {
 		response.WriteJSON(w, http.StatusOK, student)
 	}
 }
+
+func GetList() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		slog.Info("Received request to get list of students")
+
+		store := storage.NewMySQLStorage()
+
+		students, err := store.GetAllStudents()
+		if err != nil {
+			slog.Error("Failed to get students", "error", err)
+			response.WriteJSON(w, http.StatusInternalServerError, response.GenerateErrorResponse(err, http.StatusInternalServerError))
+			return
+		}
+
+		response.WriteJSON(w, http.StatusOK, students)
+	}
+}
