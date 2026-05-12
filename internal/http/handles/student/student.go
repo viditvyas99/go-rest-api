@@ -6,6 +6,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/Go-REST-API/internal/storage"
 	"github.com/Go-REST-API/internal/types"
@@ -52,5 +53,33 @@ func New() http.HandlerFunc {
 
 		response.WriteJSON(w, http.StatusCreated, map[string]string{"message": "Student created successfully", "id": string(id)})
 
+	}
+}
+
+func GetStudent() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		slog.Info("Received request to get student by ID")
+
+		//get id from url path
+
+		idStr := r.PathValue("id")
+
+		id, err := strconv.ParseInt(idStr, 10, 64)
+
+		if err != nil {
+			response.WriteJSON(w, http.StatusBadRequest, response.GenerateErrorResponse(errors.New("invalid id format"), http.StatusBadRequest))
+			return
+		}
+
+		store := storage.NewMySQLStorage()
+
+		student, err := store.GetStudentByID(id)
+		if err != nil {
+			slog.Error("Failed to get student", "error", err)
+			response.WriteJSON(w, http.StatusInternalServerError, response.GenerateErrorResponse(err, http.StatusInternalServerError))
+			return
+		}
+
+		response.WriteJSON(w, http.StatusOK, student)
 	}
 }
